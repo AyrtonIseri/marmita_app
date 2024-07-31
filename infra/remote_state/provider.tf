@@ -21,5 +21,12 @@ terraform {
 provider "aws" {
     profile = module.env.aws_provider.profile
     region = module.env.aws_provider.region
+    default_tags {
+        tags = {
+            App = "marmita"
+            ManagedBy = "Terraform"
+            SourceCode = "infra/remote_state/provider.tf"
+        }
+    }
 }
 
