@@ -1,3 +1,3 @@
 module "env" {
-    source = "../module/aws"
+  source = "../module/aws"
 }

@@ -9,7 +9,7 @@ module "vpc" {
   public_subnets  = local.public_subnets
 
   private_subnet_names = [for index, subnet in local.private_subnets : "marmita-private-subnet-${index}"]
-  public_subnet_names = [for index, subnet in local.public_subnets : "marmita-public-subnet-${index}"]
+  public_subnet_names  = [for index, subnet in local.public_subnets : "marmita-public-subnet-${index}"]
 
   single_nat_gateway = true
   enable_nat_gateway = true

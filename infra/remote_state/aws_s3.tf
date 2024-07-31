@@ -1,5 +1,5 @@
-resource "aws_s3_bucket" "remote_state_bucket" { 
-    bucket_prefix = "terraform-remote-state"
+resource "aws_s3_bucket" "remote_state_bucket" {
+  bucket_prefix = "terraform-remote-state"
 }
 
 

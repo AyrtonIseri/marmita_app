@@ -1,4 +1,4 @@
 locals {
-  profile            = "marmita-admin"
-  region             = "us-east-1"
+  profile = "marmita-admin"
+  region  = "us-east-1"
 }
