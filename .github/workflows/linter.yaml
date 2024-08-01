@@ -1,0 +1,36 @@
+name: Repository linter
+run-name: repository linting run
+
+on:
+    push:
+    pull_request:
+      branches:
+        - main    
+
+env:
+    TFLINT_VERSION: v0.52.0
+
+
+jobs: 
+    Run-TFlint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out current repository code to the runner's filesystem
+              uses: actions/checkout@v4
+
+            - name: Setup TFlint
+              uses: terraform-linters/setup-tflint@v4
+              with:
+                tflint_version: ${{ env.TFLINT_VERSION }}
+
+            - name: Runs tflint with ReviewDog
+              uses: reviewdog/action-tflint
+              with:
+                github_token: ${{ secrets.github_token }}
+                level: warning
+                reporter: github-pr-check
+                fail_on_error: true
+                working_directory: ./infra/
+                tflint_version: ${{ env.TFLINT_VERSION }}
+                
+
