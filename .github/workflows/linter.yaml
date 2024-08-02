@@ -13,7 +13,7 @@ jobs:
     Run-TFlint:
         runs-on: ubuntu-latest
         steps:
-          - name: Check out current repository code to the runner's filesystem
+          - name: Check out current repo
             uses: actions/checkout@v4
 
           - name: Setup terraform
@@ -32,6 +32,6 @@ jobs:
           - name: Change directory to infra
             run: cd infra/
       
-          - name: Run tflint for workflow to fail if there are warning or errors
+          - name: Run tflint on infra directory
             run: |
               tflint --recursive --config ${{ github.workspace }}/.tflint.hcl
