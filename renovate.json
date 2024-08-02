@@ -4,5 +4,6 @@
     "config:recommended", ":dependencyDashboard"
   ],
   "labels": ["dependencies"],
-  "assignees": ["ayrtoniseri"]
+  "assignees": ["ayrtoniseri"],
+  "reviewers": ["ayrtoniseri"]
 }
