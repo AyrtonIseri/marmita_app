@@ -13,7 +13,7 @@ module "vpc" {
   public_subnet_names  = [for index, subnet in local.public_subnets : "marmita-public-subnet-${index}"]
 
   single_nat_gateway = true
-  enable_nat_gateway = true
+  enable_nat_gateway = false
   enable_vpn_gateway = false
 
 }
