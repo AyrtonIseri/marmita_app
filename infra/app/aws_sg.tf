@@ -13,6 +13,24 @@ resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_ssm_vpce"
   ip_protocol = "tcp"
 }
 
+resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_temp_internet_http_access" {
+  security_group_id            = aws_security_group.webserver_backend_sg.id
+
+  cidr_ipv4 = "0.0.0.0/0"
+  from_port   = "80"
+  to_port     = "80"
+  ip_protocol = "tcp"
+}
+
+resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_temp_internet_https_access" {
+  security_group_id            = aws_security_group.webserver_backend_sg.id
+
+  cidr_ipv4 = "0.0.0.0/0"
+  from_port   = "443"
+  to_port     = "443"
+  ip_protocol = "tcp"
+}
+
 resource "aws_security_group" "ssm_vpce_sg" {
   name        = "ssm-vpce-sg"
   description = "Security group to be used with vpce related to the ssm service to log into the webserver"

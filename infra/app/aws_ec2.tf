@@ -6,7 +6,7 @@ resource "aws_instance" "marmita_backend_webserver" {
   instance_type        = "t2.micro"
   security_groups      = [aws_security_group.webserver_backend_sg.id]
   source_dest_check    = false
-  subnet_id            = module.vpc.private_subnets[0]
+  subnet_id            = local.webserver_subnet
   tenancy              = "default"
 
   tags = {
