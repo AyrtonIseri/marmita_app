@@ -4,6 +4,8 @@ resource "aws_security_group" "webserver_backend_sg" {
   vpc_id      = module.vpc.vpc_id
 }
 
+# This is the only security group rule that should remain after a refactoring, leading the instance to
+# a private subnet.
 resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_ssm_vpce" {
   security_group_id            = aws_security_group.webserver_backend_sg.id
   referenced_security_group_id = aws_security_group.ssm_vpce_sg.id
@@ -14,18 +16,36 @@ resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_ssm_vpce"
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_temp_internet_http_access" {
-  security_group_id            = aws_security_group.webserver_backend_sg.id
+  security_group_id = aws_security_group.webserver_backend_sg.id
 
-  cidr_ipv4 = "0.0.0.0/0"
+  cidr_ipv4   = "0.0.0.0/0"
   from_port   = "80"
   to_port     = "80"
   ip_protocol = "tcp"
 }
 
 resource "aws_vpc_security_group_egress_rule" "webserver_backend_allow_temp_internet_https_access" {
-  security_group_id            = aws_security_group.webserver_backend_sg.id
+  security_group_id = aws_security_group.webserver_backend_sg.id
 
-  cidr_ipv4 = "0.0.0.0/0"
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = "443"
+  to_port     = "443"
+  ip_protocol = "tcp"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "webserver_backend_allow_temp_internet_http_access" {
+  security_group_id = aws_security_group.webserver_backend_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = "80"
+  to_port     = "80"
+  ip_protocol = "tcp"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "webserver_backend_allow_temp_internet_https_access" {
+  security_group_id = aws_security_group.webserver_backend_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
   from_port   = "443"
   to_port     = "443"
   ip_protocol = "tcp"

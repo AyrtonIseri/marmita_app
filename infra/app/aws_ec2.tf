@@ -1,6 +1,6 @@
 resource "aws_instance" "marmita_backend_webserver" {
   ami                         = "ami-0ae8f15ae66fe8cda"
-  associate_public_ip_address = false
+  associate_public_ip_address = true
 
   iam_instance_profile = aws_iam_instance_profile.ssm_managed_ec2_instance_profile_core.name
   instance_type        = "t2.micro"
