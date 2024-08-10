@@ -6,4 +6,6 @@ locals {
 
   private_subnets = [for index, az in local.vpc_azs : cidrsubnet(local.vpc_cidr, 8, index)]
   public_subnets  = [for index, az in local.vpc_azs : cidrsubnet(local.vpc_cidr, 8, index + local.num_azs)]
+
+  webserver_subnet = module.vpc.public_subnets[0]
 }
