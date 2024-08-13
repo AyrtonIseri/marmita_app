@@ -3,8 +3,8 @@ run-name: Application deployment run
 
 on: 
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
 
 jobs:
   deploy-to-dockerhub:
@@ -20,21 +20,33 @@ jobs:
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: build-image
-        run: docker build -t marmitalandia/marmita-webserver -f ./build/Dockerfile .
-      
+        run: docker build -t $DOCKERHUB_USERNAME/marmita-webserver -f ./build/Dockerfile .
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
       - name: push-to-hub
-        run: docker push marmitalandia/marmita-webserver
-          
-  # pull-webserver: 
-  #   runs-on: ubuntu-latest
-  #   needs: [deploy-to-dockerhub]
-  #   if: needs.deploy-to-dockerhub.result == 'success'
-  #   steps:
-  #     - name: push-docker-hub
-  #       run:
+        run: docker push $DOCKERHUB_USERNAME/marmita-webserver
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+                    
+  pull-webserver: 
+    runs-on: ubuntu-latest
+    needs: [deploy-to-dockerhub]
+    if: needs.deploy-to-dockerhub.result == 'success'
+    steps:
+      - name: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          mask-aws-account-id: true
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  #     - name: ssm-pull-image
-  #       run: 
-
-
-        
+      - name: ssm-pull-image
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --targets "Key=tag:Name,Values=marmita-backend-webserver" \
+            --parameters commands="docker stop webserver && docker rm webserver && docker pull $DOCKERHUB_USERNAME/marmita-webserver && docker run -d --rm -p 80:80 --name webserver $DOCKERHUB_USERNAME/marmita-webserver"
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
