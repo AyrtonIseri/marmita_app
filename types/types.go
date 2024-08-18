@@ -33,5 +33,7 @@ type Marmita struct {
 
 type ClientModel interface {
 	CreateClient(Whatsapp string, Address string, Name string) error
-	GetClientById(UserID uint) (uint, error)
+	GetClientById(UserID uint) (Client, error)
+	GetClientByWhatsapp(Whatsapp string) (Client, error)
+	GetClients() ([]*Client, error)
 }
