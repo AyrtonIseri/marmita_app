@@ -2,7 +2,6 @@ package whatsapp
 
 import (
 	"fmt"
-	"marmita/controller/client"
 	"marmita/env"
 	"marmita/types"
 	"net/http"
@@ -13,10 +12,10 @@ import (
 var USERSTATE map[string]types.FlowState
 
 type Chatbot struct {
-	ClientController client.Controller
+	ClientController types.ClientController
 }
 
-func NewChatbot(cc client.Controller) *Chatbot {
+func NewChatbot(cc types.ClientController) *Chatbot {
 	return &Chatbot{ClientController: cc}
 }
 
