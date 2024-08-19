@@ -20,6 +20,11 @@ func NewChatbot(cc client.Controller) *Chatbot {
 	return &Chatbot{ClientController: cc}
 }
 
+func (cb Chatbot) MessageHandler(w http.ResponseWriter, r *http.Request) error {
+	err := ReadIncomingMessage(w, r)
+	return err
+}
+
 func (cb Chatbot) WriteToUser(UserWhatsapp string, Body string, w http.ResponseWriter) {
 	message := &twiml.MessagingMessage{
 		Body: Body,
