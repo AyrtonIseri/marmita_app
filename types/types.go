@@ -1,6 +1,12 @@
 package types
 
-import "time"
+import (
+	"net/http"
+	"time"
+)
+
+type FlowState int
+type RegisterState int
 
 type Client struct {
 	ID       uint
@@ -36,4 +42,8 @@ type ClientModel interface {
 	GetClientById(UserID uint) (Client, error)
 	GetClientByWhatsapp(Whatsapp string) (Client, error)
 	GetClients() ([]*Client, error)
+}
+
+type View interface {
+	MessageHandler(r *http.Request, w http.ResponseWriter) error
 }
