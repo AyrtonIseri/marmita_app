@@ -50,6 +50,9 @@ type ClientModel interface {
 	GetClients() ([]*Client, error)
 }
 
+type ClientController interface {
+}
+
 type View interface {
 	MessageHandler(r *http.Request, w http.ResponseWriter) error
 }
