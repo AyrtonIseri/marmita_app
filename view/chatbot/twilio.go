@@ -17,7 +17,7 @@ func ReadIncomingMessage(w http.ResponseWriter, r *http.Request) error {
 		panic(err)
 	}
 
-	fmt.Printf("New request received. Information: \n %s \n", string(dump))
+	fmt.Printf("\nNew request received. Information: \n %s \n", string(dump))
 
 	// printing the body
 	body, err := ioutil.ReadAll(r.Body)
@@ -28,19 +28,7 @@ func ReadIncomingMessage(w http.ResponseWriter, r *http.Request) error {
 	defer r.Body.Close()
 
 	// print raw body
-	fmt.Println("Raw Body:", string(body))
-
-	// Assuming the body is JSON, unmarshal it into a map
-	var data map[string]interface{}
-	if err := json.Unmarshal(body, &data); err != nil {
-		panic(err)
-	}
-
-	// Print all fields
-	fmt.Println("Parsed Fields:")
-	for key, value := range data {
-		fmt.Printf("%s: %v\n", key, value)
-	}
+	fmt.Println("\nRaw Body:", string(body))
 
 	// Finally save it into a proper type
 	var Response types.TwilioResponse
