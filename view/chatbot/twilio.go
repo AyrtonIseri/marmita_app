@@ -1,58 +1,38 @@
 package whatsapp
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"marmita/types"
 	"net/http"
-	"net/http/httputil"
+
+	"github.com/gorilla/schema"
 )
 
 // aqui vamos formatar as mensagens para retornar para o twilio
 
-func ReadIncomingMessage(w http.ResponseWriter, r *http.Request) error {
-	dump, err := httputil.DumpRequest(r, true)
+func ReadIncomingMessage(w http.ResponseWriter, r *http.Request) (types.TwilioRequest, error) {
+	err := r.ParseForm()
 	if err != nil {
+		fmt.Println("Couldn't parse url properly. Abording request")
 		panic(err)
 	}
 
-	fmt.Printf("New request received. Information: \n %s \n", string(dump))
+	var Request types.TwilioRequest
 
-	// printing the body
-	body, err := ioutil.ReadAll(r.Body)
+	if MessageType := r.FormValue("MessageType"); MessageType != "text" {
+		err = fmt.Errorf("formato invalido de mensagem. reiniciando chat")
+		return Request, err
+	}
+
+	Decoder := schema.NewDecoder()
+	Decoder.IgnoreUnknownKeys(true)
+	err = Decoder.Decode(&Request, r.Form)
 	if err != nil {
+		fmt.Println("Couldn't decode the original string into the Request type")
 		panic(err)
 	}
 
-	defer r.Body.Close()
+	fmt.Println("\nUser Request: ", Request)
 
-	// print raw body
-	fmt.Println("Raw Body:", string(body))
-
-	// Assuming the body is JSON, unmarshal it into a map
-	var data map[string]interface{}
-	if err := json.Unmarshal(body, &data); err != nil {
-		panic(err)
-	}
-
-	// Print all fields
-	fmt.Println("Parsed Fields:")
-	for key, value := range data {
-		fmt.Printf("%s: %v\n", key, value)
-	}
-
-	// Finally save it into a proper type
-	var Response types.TwilioResponse
-
-	err = json.NewDecoder(r.Body).Decode(&Response)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("\nFinal response WAID: ", Response.WppUser)
-	fmt.Println("\nFinal response TwilioNumber: ", Response.TwilioWpp)
-	fmt.Println("\nFinal response Body: ", Response.Body)
-
-	return nil
+	return Request, nil
 }
