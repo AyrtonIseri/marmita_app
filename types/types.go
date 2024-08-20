@@ -8,10 +8,10 @@ import (
 type FlowState int
 type RegisterState int
 
-type TwilioResponse struct {
-	WppUser   string `json:"WaId"`
-	TwilioWpp string `json:"To"`
-	Body      string `json:"Body"`
+type TwilioRequest struct {
+	WppUser   string `schema:"From"`
+	TwilioWpp string `schema:"To"`
+	Body      string `schema:"Body"`
 }
 
 type Client struct {

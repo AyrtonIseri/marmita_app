@@ -5,6 +5,7 @@ import (
 	"marmita/env"
 	"marmita/types"
 	"net/http"
+	"strings"
 
 	"github.com/twilio/twilio-go/twiml"
 )
@@ -20,8 +21,18 @@ func NewChatbot(cc types.ClientController) *Chatbot {
 }
 
 func (cb Chatbot) MessageHandler(w http.ResponseWriter, r *http.Request) error {
-	err := ReadIncomingMessage(w, r)
-	return err
+	Request, err := ReadIncomingMessage(w, r)
+	if err != nil {
+		return err
+	}
+
+	FinalBody := strings.Builder{}
+	FinalBody.WriteString("Message received. Submitting a copy: ")
+	FinalBody.WriteString(Request.Body)
+
+	cb.WriteToUser(Request.WppUser, FinalBody.String(), w)
+
+	return nil
 }
 
 func (cb Chatbot) WriteToUser(UserWhatsapp string, Body string, w http.ResponseWriter) {
