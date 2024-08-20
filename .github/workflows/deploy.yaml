@@ -47,6 +47,6 @@ jobs:
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --targets "Key=tag:Name,Values=marmita-backend-webserver" \
-            --parameters commands="docker stop webserver && docker rm webserver && docker pull $DOCKERHUB_USERNAME/marmita-webserver && docker run -d --rm -p 80:80 --name webserver $DOCKERHUB_USERNAME/marmita-webserver"
+            --parameters commands="docker kill webserver && docker pull $DOCKERHUB_USERNAME/marmita-webserver && docker run -d --rm -p 80:80 --name webserver $DOCKERHUB_USERNAME/marmita-webserver"
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
