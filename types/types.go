@@ -5,9 +5,6 @@ import (
 	"time"
 )
 
-type FlowState int
-type RegisterState int
-
 type TwilioRequest struct {
 	WppUser   string `schema:"From"`
 	TwilioWpp string `schema:"To"`
@@ -54,5 +51,15 @@ type ClientController interface {
 }
 
 type View interface {
-	MessageHandler(r *http.Request, w http.ResponseWriter) error
+	MessageHandler(r *http.Request, w http.ResponseWriter) error // this should route the request to the correct flow! And also reply
+	WriteToUser(message string) error                            // write a message to the user
+	SaveInput(value string) error                                // save the input somewhere so that the user can input its information 1-by-1
+	ForwardCommand() error                                       // calls controller to further commands
+}
+
+type Flow interface {
+	ListEntities() error                              // list all entities available for registering/update/etc (should be granular at flow level)
+	GetEntityFields(entity string) error              // returns all fields of an entity in a slice lets say
+	ValidateResponse(response string, step int) error // validate whether the response is acceptable (multi choice for example)
+	WelcomeMessage(*string)
 }

@@ -3,6 +3,7 @@ package cookies
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -25,6 +26,8 @@ func ReadCookies(r *http.Request, CookieName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	fmt.Printf("Cookie name: %s, Cookie value: %s\n", CookieName, Cookie.Value)
 
 	// Decode the cookie value:
 	Value, err := base64.URLEncoding.DecodeString(Cookie.Value)
